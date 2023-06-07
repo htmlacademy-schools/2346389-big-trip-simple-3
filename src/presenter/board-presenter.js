@@ -7,6 +7,7 @@ import {render} from '../render.js';
 import { isEscapeKey } from '../util.js';
 
 export default class BoardPresenter { //создание и отображение списка маршрутных точек
+
   #routePointListComponent = new RoutePointList();
   #boardContainer = null;
   #point = null;
