@@ -3,7 +3,7 @@ import { getRandomId, getRandomElement } from '../util.js';
 import { generatePicture } from './picture.js';
 
 const destinationsId = [];
-const destinations = [];
+export const destinations = [];
 
 const getRandomDestination = () => {
   let id = getRandomId();

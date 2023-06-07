@@ -1,18 +1,17 @@
-import Creation from '../view/creation.js';
 import Editing from '../view/editing.js';
+import Creation from '../view/creation.js';
 import Sorting from '../view/sorting.js';
 import RoutePoint from '../view/route-point.js';
 import RoutePointList from '../view/route-point-list.js';
-import {render} from '../render.js';
+import {render, replace} from '../render.js';
 import { isEscapeKey } from '../util.js';
+import NoPointsWarn from '../view/no-points-warning.js';
 
 export default class BoardPresenter { //создание и отображение списка маршрутных точек
 
   #routePointListComponent = new RoutePointList();
   #boardContainer = null;
   #point = null;
-  #points = null;
-
 
   constructor({boardContainer}, point) {
     this.#boardContainer = boardContainer;
@@ -20,55 +19,51 @@ export default class BoardPresenter { //создание и отображени
   }
 
   init() {
-    this.#points = [...this.#point.points];
-    render(this.#routePointListComponent, this.#boardContainer);
-    render(new Sorting(), this.#boardContainer);
-    render(new Creation(), this.routePointListComponent.getElement());
-    render(new RoutePoint({point: this.points[0]}), this.routePointListComponent.getElement());
-    render(new Editing({point: this.points[0]}), this.routePointListComponent.getElement());
-
-    for (let i = 0; i < this.#points.length; i++) { //для каждой маршрутной точки создается новый объект RoutePoint, который затем рендерится в DOM
-      this.#renderPoint(this.#points[i]);
+    const points = [...this.#point];
+    if (points.length === 0) {
+      render(new NoPointsWarn(), this.#boardContainer);
+    }
+    else {
+      render(new Sorting(), this.#boardContainer);
+      render(this.#routePointListComponent, this.#boardContainer);
+      render(new Creation(points[0]), this.#routePointListComponent.element);
+      for (let i = 0; i < points.length; i++) {
+        this.#renderPoint(points[i]);
+      }
     }
   }
 
-  #renderPoint = (point) => {
-    const pointComponent = new RoutePoint(point);
-    const pointEditComponent = new Editing(point);
-    const replaceFormToPoint = () => {
-      this.#routePointListComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
-    };
-    const replacePointToForm = () => {
-      this.#routePointListComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
-    };
-
-    const closeFormOnEscape = (evt) => {
-      if(isEscapeKey(evt)) {
+  #renderPoint(point) {
+    const ecsKeyDownHandler = (evt) => {
+      if (isEscapeKey(evt)) {
         evt.preventDefault();
         replaceFormToPoint();
-        document.body.removeEventListener('keydown', closeFormOnEscape());
+        document.body.removeEventListener('keydown', ecsKeyDownHandler);
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      replacePointToForm();
-      document.body.addEventListener('keydown', closeFormOnEscape());
+    const pointComponent = new RoutePoint({
+      point: point,
+      onEditClick: () => {
+        replacePointToForm.call(this);
+        document.body.addEventListener('keydown', ecsKeyDownHandler);
+      }});
+
+    const editingFormComponent = new Editing({
+      point: point,
+      onFormSubmit: () => {
+        replaceFormToPoint.call(this);
+        document.body.removeEventListener('keydown', ecsKeyDownHandler);
+      }
     });
 
-    pointEditComponent.element.querySelector('.event__save-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.body.removeEventListener('keydown', closeFormOnEscape());
-    });
+    function replacePointToForm() {
+      replace(editingFormComponent, pointComponent);
+    }
 
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.body.removeEventListener('keydown', closeFormOnEscape());
-    });
-
+    function replaceFormToPoint() {
+      replace(pointComponent, editingFormComponent);
+    }
     render(pointComponent, this.#routePointListComponent.element);
-  };
+  }
 }
-
