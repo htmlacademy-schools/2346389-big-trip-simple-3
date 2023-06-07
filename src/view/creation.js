@@ -1,13 +1,13 @@
-import {createElement} from '../render';
 import { getDestinationById, getDestinationPictureById } from '../mock/destination';
 import { formatToFormDate } from '../util';
 import { getOfferName, getOfferPrice } from '../mock/data';
+import AbstractView from '../framework/view/abstract-view.js';
 
-function createOffersTemplate(offers) {
-  return offers.map((offer) => `
+export function createOffersTemplate(offers) {
+  return offers.map((offer, index) => `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-      <label class="event__offer-label" for="event-offer-luggage-1">
+      <input class="event__offer-checkbox visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" checked>
+      <label class="event__offer-label" for="event-offer-${index}">
         <span class="event__offer-title">${getOfferName(offer)}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${getOfferPrice(offer)}</span>
@@ -17,6 +17,8 @@ function createOffersTemplate(offers) {
 }
 
 function createCreationFormTemplate(point){
+  // eslint-disable-next-line no-console
+  console.log(point);
   const {dateFrom, destination, offers, type} = point;
   const date = formatToFormDate(dateFrom);
   const offersTemplate = createOffersTemplate(offers);
@@ -123,27 +125,16 @@ function createCreationFormTemplate(point){
   );
 }
 
-export default class Creation {
+export default class Creation extends AbstractView {
   #element = null;
   #point = null;
 
   constructor(point) {
-    this.point = point;
+    super();
+    this.#point = point;
   }
 
-  getTemplate() {
+  get template() {
     return createCreationFormTemplate(this.#point);
   }
-
-  getElement() { //функия создания элемента, если он ещё не был создан
-    if (!this.#element) { //проверка на существование элемента
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() { //функция удаления элемента
-    this.#element = null;
-  }
-
 }

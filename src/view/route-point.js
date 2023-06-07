@@ -1,7 +1,7 @@
-import {createElement} from '../render.js';
 import {getOfferName, getOfferPrice} from '../mock/data.js';
 import {getDestinationById} from '../mock/destination.js';
 import { formatToDateTime, formatToEventDate, formatToEventDateTime, formatToTime } from '../util.js';
+import AbstractView from '../framework/view/abstract-view';
 
 function createOffersTemplate(offers) {
   return offers.map((offer) => `
@@ -50,27 +50,24 @@ function createRoutePointTemplate(point) {
         </div>
       </li>`
   );
-}
-export default class RoutePoint {
-  #element = null;
-  #point = null;
 
-  constructor(point) {
+}export default class Point extends AbstractView {
+  #point = null;
+  #handleEditClick = null;
+
+  constructor({point, onEditClick}) {
+    super();
     this.#point = point;
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() { //функция возращения строк с разметкой
+  get template() {
     return createRoutePointTemplate(this.#point);
   }
 
-  getElement() { //функия создания элемента, если он ещё не был создан
-    if (!this.#element) { //проверка на существование элемента
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() { //функция удаления элемента
-    this.#element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

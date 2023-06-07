@@ -6,7 +6,7 @@ const description = [
   'Muchos gracias aficion esto es para vosotros siiiuuu.'
 ];
 
-const transportList = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const pointType = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const places = ['Saint Petersburg', 'Tokyo', 'Rome', 'Tbilisi', 'New York', 'Sydney'];
 
@@ -160,6 +160,6 @@ const offersByType = [
   },
 ];
 
-const getArrayFromType = (type) => offersByType.find((offer) => offer.type === type).offers.map((off) => (off.id)); //массив ID для заданного транспорта
+const getArrayFromType = (type) => offersByType.find((offer) => offer.type === type).offers.map((off) => (off.id)); //массив ID
 
-export {description, transportList, places, dates, offers, getOfferName, getOfferPrice, getArrayFromType};
+export {description, pointType, places, dates, offers, getOfferName, getOfferPrice, getArrayFromType};
