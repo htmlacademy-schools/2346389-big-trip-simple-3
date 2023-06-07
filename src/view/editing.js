@@ -59,9 +59,12 @@ function createEditFormTemplate() {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+          <option value="Saint Petersburg"></option>
+          <option value="Tokyo"></option>
+          <option value="Rome"></option>
+          <option value="Tbilisi"></option>
+          <option value="New York"></option>
+          <option value="Sydney"></option>
         </datalist>
       </div>
       <div class="event__field-group  event__field-group--time">
