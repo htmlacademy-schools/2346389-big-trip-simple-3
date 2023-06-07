@@ -26,7 +26,6 @@ function replace(newComponent, oldComponent) {
   if (parent === null) {
     throw new Error('Parent element does not exist');
   }
-
   parent.replaceChild(newElement, oldElement);
 }
 
@@ -34,7 +33,6 @@ function remove(component) {
   if (component === null) {
     return;
   }
-
   component.element.remove();
   component.removeElement();
 }
