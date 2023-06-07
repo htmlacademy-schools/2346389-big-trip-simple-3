@@ -26,9 +26,9 @@ export const getRandomPoint = () => {
 };
 
 export class Point {
-  points = Array.from({length: COUNT}, getRandomPoint);
+  #points = Array.from({length: COUNT}, getRandomPoint);
 
   getPoints() {
-    return this.points;
+    return this.#points;
   }
 }

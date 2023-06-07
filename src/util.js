@@ -4,12 +4,12 @@ const EVENT_DATE_FORMAT = 'MMM D';
 const EVENT_TIME_FORMAT = 'H:mm';
 const EVENT_DATETIME_FORMAT = 'DD/MM/YY H:mm';
 
-const removeTimeFromDatetime = (datetimeStr) => datetimeStr.substring(0, datetimeStr.lastIndexOf(':'));
-const formatDateToEventDate = (datetimeStr) => dayjs(datetimeStr).format(EVENT_DATE_FORMAT);
-const formatDatetimeToEventDatetime = (datetimeStr) => dayjs(datetimeStr).format(EVENT_DATETIME_FORMAT);
-const formatTimeToEventTime = (timeStr) => dayjs(timeStr, 'HH:mm:ss').format(EVENT_TIME_FORMAT);
-const formatDatetimeToEventTime = (datetimeStr) => dayjs(datetimeStr).format(EVENT_TIME_FORMAT);
-const formatDatetimeToFormDatetime = (datetimeStr) => dayjs(datetimeStr).format(EVENT_DATETIME_FORMAT);
+const formatToEventDateTime = (date) => date.substring(0, date.indexOf('T'));
+const formatToEventDate = (date) => dayjs(date).format(EVENT_DATE_FORMAT);
+const formatToDateTime = (date) => date.substring(0, date.indexOf('.'));
+const formatToTime = (date) => dayjs(date).format(EVENT_TIME_FORMAT);
+const formatToUpperCase = (type) => type.charAt(0).toUpperCase() + type.slice(1);
+const formatToFormDate = (date) => dayjs(date).format(EVENT_DATETIME_FORMAT);
 
 const getRandomElement = (items) => items[Math.floor(Math.random() * items.length)];
 
@@ -17,5 +17,7 @@ const getRandomPrice = () => Math.floor(Math.random() * 1000) + 100;
 
 const getRandomId = () => Math.floor(Math.random() * 100) + 1;
 
-export {getRandomElement, getRandomPrice, getRandomId, removeTimeFromDatetime, formatDateToEventDate, formatDatetimeToEventDatetime, formatTimeToEventTime,
-  formatDatetimeToEventTime, formatDatetimeToFormDatetime};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
+  formatToUpperCase, formatToFormDate, isEscapeKey};

@@ -17,18 +17,21 @@ function createFiltersTemplate() { //возвращает шаблон HTML дл
 }
 
 export default class Filters {
+
+  #element = null;
+
   getTemplate() { //функция возвращения шаблона HTML для формы фильтров
     return createFiltersTemplate();
   }
 
   getElement() { //функия создания элемента, если он ещё не был создан
-    if (!this.element) { //проверка на существование элемента
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) { //проверка на существование элемента
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() { //функция удаления элемента
-    this.element = null;
+    this.#element = null;
   }
 }

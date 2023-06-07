@@ -1,7 +1,6 @@
 import {createElement} from '../render';
 import { getDestinationById, getDestinationPictureById } from '../mock/destination';
-import { getRandomPoint } from '../mock/point';
-import { formatDatetimeToFormDatetime } from '../util';
+import { formatToFormDate } from '../util';
 import { getOfferName, getOfferPrice } from '../mock/data';
 
 function createOffersTemplate(offers) {
@@ -17,10 +16,9 @@ function createOffersTemplate(offers) {
   `).join('');
 }
 
-function createCreationFormTemplate(){
-  const point = getRandomPoint();
+function createCreationFormTemplate(point){
   const {dateFrom, destination, offers, type} = point;
-  const date = formatDatetimeToFormDatetime(dateFrom);
+  const date = formatToFormDate(dateFrom);
   const offersTemplate = createOffersTemplate(offers);
   const visibility = offers.length === 0 ? 'visually-hidden' : '';
   return(
@@ -126,23 +124,26 @@ function createCreationFormTemplate(){
 }
 
 export default class Creation {
+  #element = null;
+  #point = null;
+
   constructor(point) {
     this.point = point;
   }
 
   getTemplate() {
-    return createCreationFormTemplate(this.point);
+    return createCreationFormTemplate(this.#point);
   }
 
   getElement() { //функия создания элемента, если он ещё не был создан
-    if (!this.element) { //проверка на существование элемента
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) { //проверка на существование элемента
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() { //функция удаления элемента
-    this.element = null;
+    this.#element = null;
   }
 
 }
