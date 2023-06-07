@@ -5,19 +5,22 @@ function createRoutePointListTemplate() {
 }
 
 export default class RoutePointList {
+
+  #element = null;
+
   getTemplate() {
     return createRoutePointListTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
