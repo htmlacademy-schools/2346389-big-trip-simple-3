@@ -19,6 +19,18 @@ const getRandomId = () => Math.floor(Math.random() * 100) + 1;
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
+const isDateBeforToday = (point) => dayjs(point.dateFrom).isSameOrBefore(dayjs(), 'day');
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future'
+};
+
+export const filter = {
+  [FilterType.EVERYTHING]: (tripPoints) => tripPoints,
+  [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => isDateBeforToday(tripPoint.dateFrom)),
+};
+
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
   formatToUpperCase, formatToFormDate, isEscapeKey};
 
