@@ -1,17 +1,15 @@
-import Editing from '../view/editing.js';
-import Creation from '../view/creation.js';
-import Sorting from '../view/sorting.js';
-import RoutePoint from '../view/route-point.js';
-import RoutePointList from '../view/route-point-list.js';
-import {render, replace} from '../render.js';
-import { isEscapeKey } from '../util.js';
-import NoPointsWarn from '../view/no-points-warning.js';
+import RoutePointList from '../view/route-point-list';
+import PointPresenter from './point-presenter';
+import {render, RenderPosition} from '../framework/render.js';
 
 export default class BoardPresenter { //создание и отображение списка маршрутных точек
 
   #routePointListComponent = new RoutePointList();
   #boardContainer = null;
   #point = null;
+  #points = null;
+  #noPointComponent = null;
+  #pointPresenter = new Map();
 
   constructor({boardContainer}, point) {
     this.#boardContainer = boardContainer;
@@ -19,51 +17,48 @@ export default class BoardPresenter { //создание и отображени
   }
 
   init() {
-    const points = [...this.#point];
-    if (points.length === 0) {
-      render(new NoPointsWarn(), this.#boardContainer);
+    this.#points = [...this.#point];
+    this.#renderBoard();
+  }
+
+  #renderBoard() {
+    if (this.#points.length === 0) {
+      render(this.#renderNoPoints, this.#boardContainer);
+      return;
     }
-    else {
-      render(new Sorting(), this.#boardContainer);
-      render(this.#routePointListComponent, this.#boardContainer);
-      render(new Creation(points[0]), this.#routePointListComponent.element);
-      for (let i = 0; i < points.length; i++) {
-        this.#renderPoint(points[i]);
-      }
-    }
+    this.#renderPointsList();
+  }
+
+  #renderNoPoints() {
+    render(this.#noPointComponent, this.#boardContainer, RenderPosition.AFTERBEGIN );
+  }
+
+  #renderPointsList() {
+    render(this.#routePointListComponent, this.#boardContainer);
+    this.#renderPoints();
   }
 
   #renderPoint(point) {
-    const ecsKeyDownHandler = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.body.removeEventListener('keydown', ecsKeyDownHandler);
-      }
-    };
 
-    const pointComponent = new RoutePoint({
-      point: point,
-      onEditClick: () => {
-        replacePointToForm.call(this);
-        document.body.addEventListener('keydown', ecsKeyDownHandler);
-      }});
-
-    const editingFormComponent = new Editing({
-      point: point,
-      onFormSubmit: () => {
-        replaceFormToPoint.call(this);
-        document.body.removeEventListener('keydown', ecsKeyDownHandler);
-      }
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#routePointListComponent.element,
+      onModeChange: this.#handleModeChange
     });
 
-    function replacePointToForm() {
-      replace(editingFormComponent, pointComponent);
-    }
+    pointPresenter.init(point);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  }
 
-    function replaceFormToPoint() {
-      replace(pointComponent, editingFormComponent);
-    }
-    render(pointComponent, this.#routePointListComponent.element);
+  #renderPoints() {
+    this.#points.forEach((point) => this.#renderPoint(point));
+  }
+
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #clearPointList() {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 }

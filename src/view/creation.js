@@ -3,18 +3,18 @@ import { formatToFormDate } from '../util';
 import { getOfferName, getOfferPrice } from '../mock/data';
 import AbstractView from '../framework/view/abstract-view.js';
 
-export function createOffersTemplate(offers) {
-  return offers.map((offer, index) => `
+export const createOffersTemplate = (offers) => {
+  offers.map((offer) => `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" checked>
-      <label class="event__offer-label" for="event-offer-${index}">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer}" type="checkbox" name="event-offer-${offer}" checked>
+      <label class="event__offer-label" for="event-offer-${offer}">
         <span class="event__offer-title">${getOfferName(offer)}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${getOfferPrice(offer)}</span>
       </label>
     </div>
   `).join('');
-}
+};
 
 function createCreationFormTemplate(point){
   // eslint-disable-next-line no-console

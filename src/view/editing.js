@@ -105,7 +105,7 @@ function createEditingFormTemplate(point) {
       </form>`
   );
 }
-export default class EditingForm extends AbstractView {
+export default class Editing extends AbstractView {
   #point = null;
   #handleFormSubmit = null;
 

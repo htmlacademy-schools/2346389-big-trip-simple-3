@@ -22,7 +22,6 @@ function replace(newComponent, oldComponent) {
   const oldElement = oldComponent.element;
 
   const parent = oldElement.parentElement;
-
   if (parent === null) {
     throw new Error('Parent element does not exist');
   }
