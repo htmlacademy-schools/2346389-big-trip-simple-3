@@ -40,3 +40,4 @@ function remove(component) {
 export {RenderPosition, createElement, render, replace, remove};
 
 //в архив
+//
