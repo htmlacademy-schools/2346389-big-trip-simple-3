@@ -9,3 +9,5 @@ export default class NoPointsWarn extends AbstractView {
     return createNoPointsTemplate();
   }
 }
+
+//в архив

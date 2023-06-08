@@ -28,3 +28,5 @@ const getDestinationDescriptionById = (id) => destinations.find((destination) =>
 const getDestinationPictureById = (id) => destinations.find((destination) => destination.id === id).picture.src; //возвращает свойство picture найденного объекта
 
 export {getRandomDestination, getDestinationById, getDestinationDescriptionById, getDestinationPictureById};
+
+//в архив

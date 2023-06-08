@@ -32,3 +32,5 @@ export default class Sorting extends AbstractView {
     return createSortingTemplate();
   }
 }
+
+//в архив
