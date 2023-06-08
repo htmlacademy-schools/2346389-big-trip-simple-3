@@ -11,3 +11,5 @@ export default class RoutePointList extends AbstractView {
     return createPointListTemplate();
   }
 }
+
+//в архив

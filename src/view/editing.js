@@ -128,3 +128,5 @@ export default class EditingForm extends AbstractView {
     this.#handleFormSubmit();
   };
 }
+
+//в архив

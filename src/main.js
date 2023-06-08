@@ -10,3 +10,5 @@ const point = new Point();
 const boardPresenter = new BoardPresenter({boardContainer: container}, point.getPoints());
 render(new Filters, filterConteiner);
 boardPresenter.init();
+
+//в архив

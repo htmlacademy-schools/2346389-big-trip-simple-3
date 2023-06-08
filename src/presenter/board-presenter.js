@@ -67,3 +67,5 @@ export default class BoardPresenter { //создание и отображени
     render(pointComponent, this.#routePointListComponent.element);
   }
 }
+
+//в архив

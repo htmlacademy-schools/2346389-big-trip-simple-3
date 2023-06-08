@@ -71,3 +71,5 @@ function createRoutePointTemplate(point) {
     this.#handleEditClick();
   };
 }
+
+//в архив

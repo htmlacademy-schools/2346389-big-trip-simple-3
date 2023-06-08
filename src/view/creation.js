@@ -138,3 +138,5 @@ export default class Creation extends AbstractView {
     return createCreationFormTemplate(this.#point);
   }
 }
+
+//в архив

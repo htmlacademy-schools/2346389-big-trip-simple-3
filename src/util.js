@@ -21,3 +21,5 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
   formatToUpperCase, formatToFormDate, isEscapeKey};
+
+//в архив

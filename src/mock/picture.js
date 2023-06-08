@@ -6,3 +6,5 @@ export const generatePicture = () => ({
   src: `http://picsum.photos/248/152?r=${getRandomId()}`,
   description: getRandomElement(description)
 });
+
+//в архив

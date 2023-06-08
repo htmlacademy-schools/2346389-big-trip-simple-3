@@ -32,3 +32,5 @@ export class Point {
     return this.#points;
   }
 }
+
+//в архив
