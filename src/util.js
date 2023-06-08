@@ -26,12 +26,20 @@ const FilterType = {
   FUTURE: 'future'
 };
 
-export const filter = {
+const filter = {
   [FilterType.EVERYTHING]: (tripPoints) => tripPoints,
   [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => isDateBeforToday(tripPoint.dateFrom)),
 };
 
+const sortByDay = (p1, p2) => (dayjs(p1.dateFrom).diff(dayjs(p2.dateFrom)));
+
+const sortByTime = (p1, p2) => {
+  const time1 = dayjs(p1.dateTo).diff(dayjs(p1.dateFrom));
+  const time2 = dayjs(p2.dateTo).diff(dayjs(p2.dateFrom));
+  return time2 - time1;
+};
+
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
-  formatToUpperCase, formatToFormDate, isEscapeKey};
+  formatToUpperCase, formatToFormDate, isEscapeKey, filter, sortByDay, sortByTime};
 
 //в архив
