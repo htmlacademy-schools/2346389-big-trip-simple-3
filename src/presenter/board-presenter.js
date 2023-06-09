@@ -3,8 +3,9 @@ import PointPresenter from './point-presenter';
 import {render, RenderPosition} from '../framework/render.js';
 import Sorting from '../view/sorting-view';
 import { SortType } from '../sorting';
-import { sortByDay, sortByTime } from '../util';
-
+import { sortByDay, sortByPrice } from '../util';
+import NoPointsWarn from '../view/no-points-warning';
+import Creation from '../view/creation';
 export default class BoardPresenter { //создание и отображение списка маршрутных точек
 
   #routePointListComponent = new RoutePointList();
@@ -12,10 +13,11 @@ export default class BoardPresenter { //создание и отображени
   #point = null;
   #points = null;
   #noPointComponent = null;
-  #pointPresenter = new Map();
+  #pointsPresenter = new Map();
   #currentSortType = SortType.DAY;
   #sortComponent = null;
   #sourcedPoints = [];
+  #creationFormComponet = null;
 
   constructor({boardContainer}, point) {
     this.#boardContainer = boardContainer;
@@ -30,7 +32,7 @@ export default class BoardPresenter { //создание и отображени
 
   #renderBoard() {
     if (this.#points.length === 0) {
-      render(this.#renderNoPoints, this.#boardContainer);
+      this.#renderNoPoints();
       return;
     }
     this.#renderSort();
@@ -38,6 +40,7 @@ export default class BoardPresenter { //создание и отображени
   }
 
   #renderNoPoints() {
+    this.#noPointComponent = new NoPointsWarn();
     render(this.#noPointComponent, this.#boardContainer, RenderPosition.AFTERBEGIN );
   }
 
@@ -47,14 +50,13 @@ export default class BoardPresenter { //создание и отображени
   }
 
   #renderPoint(point) {
-
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#routePointListComponent.element,
       onModeChange: this.#clearPointsList
     });
 
     pointPresenter.init(point);
-    this.#pointPresenter.set(point.id, pointPresenter);
+    this.#pointsPresenter.set(point.id, pointPresenter);
   }
 
   #renderPoints() {
@@ -62,8 +64,8 @@ export default class BoardPresenter { //создание и отображени
   }
 
   #clearPointsList() {
-    this.#pointPresenter.forEach((presenter) => presenter.removePoint());
-    this.#pointPresenter.clear();
+    this.#pointsPresenter.forEach((presenter) => presenter.removePoint());
+    this.#pointsPresenter.clear();
   }
 
   #sortPoints(sortType) {
@@ -71,8 +73,8 @@ export default class BoardPresenter { //создание и отображени
       case 'sort-day':
         this.#points.sort(sortByDay);
         break;
-      case 'sort-time':
-        this.#points.sort(sortByTime);
+      case 'sort-price':
+        this.#points.sort(sortByPrice);
         break;
       default:
         this.#points = [...this.#sourcedPoints];
@@ -97,5 +99,10 @@ export default class BoardPresenter { //создание и отображени
     });
     this.#sortPoints('sort-day');
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderCreationForm() {
+    this.#creationFormComponet = new Creation(this.#points[0]);
+    render(this.#creationFormComponet, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
 }

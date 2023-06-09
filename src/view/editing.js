@@ -4,17 +4,26 @@ import { getDestinationDescriptionById, getDestinationById } from '../mock/desti
 import { createOffersTemplate } from './creation.js';
 
 function createEditingFormTemplate(point) {
-  const {dateFrom, destination, offers, type} = point;
-  const date = formatToFormDate(dateFrom);
-  const offersTemplate = createOffersTemplate(offers);
-  const visibility = offers.length === 0 ? 'visually-hidden' : '';
+  // eslint-disable-next-line no-console
+  console.log('point:', point);
+  // eslint-disable-next-line no-console
+  console.log('dateFrom:', point.dateFrom);
+  // eslint-disable-next-line no-console
+  console.log('destination:', point.destination);
+  // eslint-disable-next-line no-console
+  console.log('offers:', point.offers);
+  // eslint-disable-next-line no-console
+  console.log('type:', point.type);
+  const date = formatToFormDate(point.dateFrom);
+  const offersTemplate = createOffersTemplate(point.offers);
+  const visibility = point.offers.length === 0 ? 'visually-hidden' : '';
   return(
     `<form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
             <div class="event__type-list">
@@ -61,9 +70,9 @@ function createEditingFormTemplate(point) {
           </div>
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${type}
+              ${point.type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestinationById(destination)}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestinationById(point.destination)}" list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -99,7 +108,7 @@ function createEditingFormTemplate(point) {
           </section>
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${getDestinationDescriptionById(destination)}</p>
+            <p class="event__destination-description">${getDestinationDescriptionById(point.destination)}</p>
           </section>
         </section>
       </form>`
