@@ -51,6 +51,7 @@ export default class PointPresenter {
       const r = render(this.#pointComponent, this.#pointListContainer);
       // eslint-disable-next-line no-console
       console.log('Render:', r);
+      return;
     }
 
     if (this.#mode === Mode.DEFAULT) {
@@ -63,6 +64,7 @@ export default class PointPresenter {
       // eslint-disable-next-line no-console
       console.log('На вход C:', this.#pointEditComponent, ',', prevPointEditComponent);
       replace(this.#pointEditComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -76,6 +78,7 @@ export default class PointPresenter {
 
   resetView() { // возвращает презентер в начальное состояние
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -96,16 +99,19 @@ export default class PointPresenter {
   #onEscapeKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
 
   #clickOnEditButton = () => {
     this.#replacePointToForm();
+    this.#pointEditComponent.reset(this.#point);
     document.body.addEventListener('keydown', this.#ecsKeyDownHandler);
   };
 
   #submitForm = () => {
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToPoint();
   };
 }

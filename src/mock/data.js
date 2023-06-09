@@ -162,6 +162,6 @@ const offersByType = [
 
 const getArrayFromType = (type) => offersByType.find((offer) => offer.type === type).offers.map((off) => (off.id)); //массив ID
 
-export {description, pointType, places, dates, offers, getOfferName, getOfferPrice, getArrayFromType};
+export {description, pointType, places, dates, offers, getOfferName, getOfferPrice, getArrayFromType, offersByType};
 
 //в архив
