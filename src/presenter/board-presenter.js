@@ -3,7 +3,7 @@ import PointPresenter from './point-presenter';
 import { render, RenderPosition } from '../framework/render.js';
 import Sorting from '../view/sorting-view';
 import { SortType } from '../sorting';
-import { sortByDay, sortByPrice } from '../util';
+import { sortByDay, sortByPrice, updateItem } from '../util';
 import NoPointsWarn from '../view/no-points-warning';
 import Creation from '../view/creation';
 
@@ -50,10 +50,15 @@ export default class BoardPresenter { //создание и отображени
     this.#renderPoints();
   }
 
+  #handleModeChange = () => {
+    this.#pointsPresenter.forEach((presenter) => presenter.resetView());
+  };
+
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#routePointListComponent.element,
-      onModeChange: this.#clearPoints
+      onModeChange: this.#handleModeChange,
+      onDataChange: this.#handlePointChange
     });
 
     pointPresenter.init(point);
@@ -64,10 +69,15 @@ export default class BoardPresenter { //создание и отображени
     this.#points.forEach((point) => this.#renderPoint(point));
   }
 
-  #clearPoints() { // удаляет все маршрутные точки из списка
-    //this.#pointsPresenter.forEach((presenter) => presenter.removePoint());
-    //this.#pointsPresenter.clear();
+  #clearPoints() {
+    this.#pointsPresenter.forEach((presenter) => presenter.removePoint());
+    this.#pointsPresenter.clear();
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointsPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
 
   #sortPoints(type) { // сортирует массив точек по выбранному типу сортировки
     switch (type) {

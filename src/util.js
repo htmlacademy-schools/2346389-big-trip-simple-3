@@ -23,6 +23,8 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const isDateBeforToday = (point) => dayjs(point.dateFrom).isSameOrBefore(dayjs(), 'day');
 
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future'
@@ -46,6 +48,6 @@ function sortByPrice(p1, p2) {
 }
 
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
-  formatToUpperCase, formatToFormDate, formatToClassicFormat, isEscapeKey, filter, sortByDay, sortByTime, sortByPrice};
+  formatToUpperCase, formatToFormDate, formatToClassicFormat, isEscapeKey, filter, sortByDay, sortByTime, sortByPrice, updateItem};
 
 //в архив

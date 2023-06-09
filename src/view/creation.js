@@ -1,27 +1,29 @@
 import { getDestinationById, getDestinationPictureById } from '../mock/destination';
 import { formatToFormDate } from '../util';
-import { getOfferName, getOfferPrice } from '../mock/data';
+import { offers } from '../mock/data';
 import AbstractView from '../framework/view/abstract-view.js';
 
-export function createOffersTemplate(offersId) {
-  return offersId.map((offer) => `
+export function createOffersTemplate(currentTypeOffers, checkedOffers, id) {
+  const offs = currentTypeOffers.map((currOffer) => offers.find((offer) => offer.id === currOffer));
+  return offs.map((offer) => {
+    const isOfferChecked = checkedOffers.includes(offer.id) ? 'checked' : '';
+    return `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer}" type="checkbox" name="event-offer-${offer}" checked>
-      <label class="event__offer-label" for="event-offer-${offer}">
-        <span class="event__offer-title">${getOfferName(offer)}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title.split(' ').at(-1)}-${id}" type="checkbox" name="event-offer-${offer.title.split(' ').at(-1)}" ${isOfferChecked}>
+      <label class="event__offer-label" for="event-offer-${offer.title.split(' ').at(-1)}-${id}">
+        <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${getOfferPrice(offer)}</span>
+        <span class="event__offer-price">${offer.price}</span>
       </label>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
-
 function createCreationFormTemplate(point){
   // eslint-disable-next-line no-console
   console.log(point);
-  const {dateFrom, destination, offers, type} = point;
+  const {dateFrom, destination, offer, type} = point;
   const date = formatToFormDate(dateFrom);
-  const offersTemplate = createOffersTemplate(offers);
+  const offersTemplate = createOffersTemplate(offer);
   const visibility = offers.length === 0 ? 'visually-hidden' : '';
   return(
     `<form class="event event--edit" action="#" method="post">
