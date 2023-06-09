@@ -1,18 +1,19 @@
 import RoutePointList from '../view/route-point-list';
 import PointPresenter from './point-presenter';
-import {render, RenderPosition} from '../framework/render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import Sorting from '../view/sorting-view';
 import { SortType } from '../sorting';
 import { sortByDay, sortByPrice } from '../util';
 import NoPointsWarn from '../view/no-points-warning';
 import Creation from '../view/creation';
+
 export default class BoardPresenter { //создание и отображение списка маршрутных точек
 
   #routePointListComponent = new RoutePointList();
   #boardContainer = null;
   #point = null;
   #points = null;
-  #noPointComponent = null;
+  #noPoins = null;
   #pointsPresenter = new Map();
   #currentSortType = SortType.DAY;
   #sortComponent = null;
@@ -24,13 +25,13 @@ export default class BoardPresenter { //создание и отображени
     this.#point = point;
   }
 
-  init() {
+  init() { // инициализирует объекты класса BoardPresenter, копирует массив точек и вызывает метод для отображения списка маршрутных точек
     this.#points = [...this.#point];
     this.#sourcedPoints = [...this.#point];
     this.#renderBoard();
   }
 
-  #renderBoard() {
+  #renderBoard() { //  проверяет, есть ли какие-либо точки в списке
     if (this.#points.length === 0) {
       this.#renderNoPoints();
       return;
@@ -40,8 +41,8 @@ export default class BoardPresenter { //создание и отображени
   }
 
   #renderNoPoints() {
-    this.#noPointComponent = new NoPointsWarn();
-    render(this.#noPointComponent, this.#boardContainer, RenderPosition.AFTERBEGIN );
+    this.#noPoins = new NoPointsWarn();
+    render(this.#noPoins, this.#boardContainer, RenderPosition.AFTERBEGIN );
   }
 
   #renderPointsList() {
@@ -52,7 +53,7 @@ export default class BoardPresenter { //создание и отображени
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#routePointListComponent.element,
-      onModeChange: this.#clearPointsList
+      onModeChange: this.#clearPoints
     });
 
     pointPresenter.init(point);
@@ -63,13 +64,13 @@ export default class BoardPresenter { //создание и отображени
     this.#points.forEach((point) => this.#renderPoint(point));
   }
 
-  #clearPointsList() {
-    this.#pointsPresenter.forEach((presenter) => presenter.removePoint());
-    this.#pointsPresenter.clear();
+  #clearPoints() { // удаляет все маршрутные точки из списка
+    //this.#pointsPresenter.forEach((presenter) => presenter.removePoint());
+    //this.#pointsPresenter.clear();
   }
 
-  #sortPoints(sortType) {
-    switch (sortType) {
+  #sortPoints(type) { // сортирует массив точек по выбранному типу сортировки
+    switch (type) {
       case 'sort-day':
         this.#points.sort(sortByDay);
         break;
@@ -80,19 +81,19 @@ export default class BoardPresenter { //создание и отображени
         this.#points = [...this.#sourcedPoints];
     }
 
-    this.#currentSortType = sortType;
+    this.#currentSortType = type;
   }
 
-  #handleSortTypeChange = (sortType) => {
+  #handleSortTypeChange = (sortType) => { // вызывает метод для сортировки и отображения списка маршрутных точек
     if (this.#currentSortType === sortType) {
       return;
     }
     this.#sortPoints(sortType);
-    this.#clearPointsList();
+    this.#clearPoints();
     this.#renderPointsList();
   };
 
-  #renderSort() {
+  #renderSort() { // создает экземпляр класса Sorting для сортировки списка маршрутных точек и вызывает метод для его отображения на странице
     this.#sortComponent = new Sorting({
       onSortTypeChange: this.#handleSortTypeChange,
       currentSortType: this.#currentSortType
@@ -101,7 +102,7 @@ export default class BoardPresenter { //создание и отображени
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderCreationForm() {
+  #renderCreationForm() { // создает экземпляр класса Creation и отображает форму создания новой маршрутной точки на странице
     this.#creationFormComponet = new Creation(this.#points[0]);
     render(this.#creationFormComponet, this.#boardContainer, RenderPosition.AFTERBEGIN);
   }
