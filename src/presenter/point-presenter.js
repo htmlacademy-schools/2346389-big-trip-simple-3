@@ -1,6 +1,6 @@
-import { render, replace, remove } from '../framework/render';
 import Point from '../view/route-point';
-import Editing from '../view/editing';
+import { render, replace, remove } from '../framework/render';
+import Editing from '../view/editing.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -8,95 +8,76 @@ const Mode = {
 };
 
 export default class PointPresenter {
-  #pointListContainer = null; // контейнер для отображения точек маршрута
-  #handleModeChange = null; // функция обратного вызова, которая вызывается при изменении режима презентера
+  #pointListContainer = null;
+  #handleModeChange = null;
+  #handleDataChange = null;
   #ecsKeyDownHandler = null;
-
   #pointComponent = null;
   #pointEditComponent = null;
-
   #point = null;
   #mode = Mode.DEFAULT;
 
-  constructor({pointListContainer, onModeChange}) {
+  constructor({pointListContainer, onModeChange, onDataChange}) {
     this.#pointListContainer = pointListContainer;
     this.#handleModeChange = onModeChange;
+    this.#handleDataChange = onDataChange;
   }
 
-  init(point) { // инициализирует презентер для данной точки маршрута
+  init(point) {
     this.#point = point;
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
-    // eslint-disable-next-line no-console
-    console.log('prevPointComponent:', prevPointComponent);
-    // eslint-disable-next-line no-console
-    console.log('prevPointEditComponent', prevPointEditComponent);
-
     this.#pointComponent = new Point({
       point: this.#point,
-      onEditClick: this.#clickOnEditButton
+      onEditClick: this.#handleEditClick
     });
-
-    // eslint-disable-next-line no-console
-    console.log('New Point:', this.#pointComponent);
 
     this.#pointEditComponent = new Editing({
       point: this.#point,
-      onFormSubmit: this.#submitForm,
+      onFormSubmit: this.#handleFormSubmit,
+      onRollUpButton: this.#handleRollupButtonClick
     });
 
-    if (prevPointComponent === null || prevPointEditComponent === null) { // проверяет компоненты точки
-      // eslint-disable-next-line no-console
-      console.log('На вход A:', this.#pointComponent, ',', this.#pointComponent);
-      const r = render(this.#pointComponent, this.#pointListContainer);
-      // eslint-disable-next-line no-console
-      console.log('Render:', r);
+    if (prevPointComponent === null || prevPointEditComponent === null) {
+      render(this.#pointComponent, this.#pointListContainer);
       return;
     }
-
     if (this.#mode === Mode.DEFAULT) {
-      // eslint-disable-next-line no-console
-      console.log('На вход B:', this.#pointComponent, ',', prevPointComponent);
       replace(this.#pointComponent, prevPointComponent);
     }
-
     if (this.#mode === Mode.EDITING) {
-      // eslint-disable-next-line no-console
-      console.log('На вход C:', this.#pointEditComponent, ',', prevPointEditComponent);
       replace(this.#pointEditComponent, prevPointEditComponent);
-      this.#mode = Mode.DEFAULT;
     }
-
     remove(prevPointComponent);
     remove(prevPointEditComponent);
   }
 
-  destroy() { // удаляет элементы DOM, связанные с этой точкой маршрута
+  destroy() {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   }
 
-  resetView() { // возвращает презентер в начальное состояние
+  resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
 
-  #replacePointToForm() { // заменяет элемент DOM, отображающий точку маршрута, на форму для редактирования информации о точке маршрута
+  #replacePointToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#onEscapeKeydown);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
-  #replaceFormToPoint() { // заменяет форму для редактирования информации о точке маршрута на элемент DOM, отображающий точку маршрута
+  #replaceFormToPoint() {
     replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#onEscapeKeydown);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   }
 
-  #onEscapeKeydown = (evt) => {
+  #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
@@ -104,14 +85,21 @@ export default class PointPresenter {
     }
   };
 
-  #clickOnEditButton = () => {
+  #handleEditClick = () => {
     this.#replacePointToForm();
     this.#pointEditComponent.reset(this.#point);
     document.body.addEventListener('keydown', this.#ecsKeyDownHandler);
   };
 
-  #submitForm = () => {
+  #handleFormSubmit = (point) => {
+    this.#replaceFormToPoint();
+    this.#handleDataChange(point);
+    document.body.removeEventListener('keydown', this.#ecsKeyDownHandler);
+  };
+
+  #handleRollupButtonClick = () => {
     this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToPoint();
+    document.body.removeEventListener('keydown', this.#ecsKeyDownHandler);
   };
 }

@@ -4,6 +4,7 @@ import { formatToClassicFormat } from '../util';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { createOffersTemplate } from './creation';
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   basePrice: 500,
@@ -123,14 +124,14 @@ function createEditingFormTemplate(point, isEditForm) {
   );
 }
 
-export default class EditingForm extends AbstractStatefulView{
+export default class Editing extends AbstractStatefulView{
   #isEditForm = null;
   #fromDatepicker = null;
   #toDatepicker = null;
 
   constructor({point = BLANK_POINT, onFormSubmit, onRollUpButton, isEditForm = true}) {
     super();
-    this._setState(EditingForm.parsePointToState(point));
+    this._setState(Editing.parsePointToState(point));
     this.#isEditForm = isEditForm;
     this._callback.onFormSubmit = onFormSubmit;
     this._callback.onRollUpButton = onRollUpButton;
@@ -159,7 +160,7 @@ export default class EditingForm extends AbstractStatefulView{
 
   reset(point) {
     this.updateElement(
-      EditingForm.parsePointToState(point),
+      Editing.parsePointToState(point),
     );
   }
 
@@ -223,7 +224,7 @@ export default class EditingForm extends AbstractStatefulView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.onFormSubmit(EditingForm.parseStateToPoint(this._state));
+    this._callback.onFormSubmit(Editing.parseStateToPoint(this._state));
   };
 
   #rollUpButtonHandler = (evt) => {
