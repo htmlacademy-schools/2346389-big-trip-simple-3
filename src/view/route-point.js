@@ -1,27 +1,34 @@
-import {getOfferName, getOfferPrice} from '../mock/data.js';
-import {getDestinationById} from '../mock/destination.js';
-import { formatToDateTime, formatToEventDate, formatToEventDateTime, formatToTime } from '../util.js';
+import { formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime } from '../util';
 import AbstractView from '../framework/view/abstract-view';
 
-function createOffersTemplate(offers) {
-  return offers.map((offer) => `
+function createOffersTemplate(offers, offersIDs, type) {
+  const currentTypeOffers = offers.find((el) => el.type === type).offers;
+  return currentTypeOffers.filter((el) => offersIDs.includes(el.id)).map((offer) => `
     <li class="event__offer">
-      <span class="event__offer-title">${getOfferName(offer)}</span>
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${getOfferPrice(offer)}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </li>
   `).join('');
 }
 
-function createRoutePointTemplate(point) {
-  const {basePrice, dateFrom, dateTo, destination, offers, type} = point;
+function createPointTemplate(point, allOffers, allDestinations) {
+  const basePrice = point.basePrice;
+  const dateFrom = point.dateFrom;
+  const dateTo = point.dateTo;
+  const destination = point.destination;
+  const type = point.type;
+  const offersIDs = point.offersIDs;
+  const destinationName = allDestinations.find((dest) => dest.id === destination).name;
+
   const eventDateTime = formatToEventDateTime(dateFrom);
   const eventDate = formatToEventDate(dateFrom);
   const fromDateTime = formatToDateTime(dateFrom);
   const fromTime = formatToTime(dateFrom);
   const toDateTime = formatToDateTime(dateTo);
   const toTime = formatToTime(dateTo);
-  const offersTemplate = createOffersTemplate(offers);
+  const offersTemplate = createOffersTemplate(allOffers, offersIDs, type);
+
   return(
     `<li class="trip-events__item">
         <div class="event">
@@ -29,7 +36,7 @@ function createRoutePointTemplate(point) {
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
           </div>
-          <h3 class="event__title">${type} ${getDestinationById(destination)}</h3>
+          <h3 class="event__title">${type} ${destinationName}</h3>
           <div class="event__schedule">
             <p class="event__time">
               <time class="event__start-time" datetime="${fromDateTime}">${fromTime}</time>
@@ -50,20 +57,25 @@ function createRoutePointTemplate(point) {
         </div>
       </li>`
   );
+}
 
-}export default class Point extends AbstractView {
+export default class Point extends AbstractView {
   #point = null;
+  #offers = null;
+  #destinations = null;
   #handleEditClick = null;
 
-  constructor({point, onEditClick}) {
+  constructor({point, offers, destinations, onEditClick}) {
     super();
     this.#point = point;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point);
+    return createPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
   #editClickHandler = (evt) => {

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { SortType } from '../sorting';
+import { SortType } from '../const';
 
 function createSortItemTemplate(sortType) {
   return `

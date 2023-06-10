@@ -1,5 +1,6 @@
 import { getRandomElement , getRandomId, getRandomPrice} from '../util';
-import { dates, getArrayFromType, pointType} from './data';
+import { dates, getArrayFromType } from './data';
+import { pointType } from '../const';
 import { getRandomDestination } from './destination';
 
 const COUNT = 3;

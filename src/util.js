@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { FilterType } from './const';
 
 const EVENT_DATE_FORMAT = 'MMM D';
 const EVENT_TIME_FORMAT = 'H:mm';
@@ -7,7 +8,7 @@ const EVENT_CLASSIC_FORMAT = 'DD/MM/YY H:mm';
 
 const formatToEventDateTime = (date) => date.substring(0, date.indexOf('T'));
 const formatToEventDate = (date) => dayjs(date).format(EVENT_DATE_FORMAT);
-const formatToDateTime = (date) => date.substring(0, date.indexOf('.'));
+const formatToDateTime = (date) => date.substring(0, date.indexOf(':'));
 const formatToTime = (date) => dayjs(date).format(EVENT_TIME_FORMAT);
 const formatToUpperCase = (type) => type.charAt(0).toUpperCase() + type.slice(1);
 const formatToFormDate = (date) => dayjs(date).format(EVENT_DATETIME_FORMAT);
@@ -25,14 +26,9 @@ const isDateBeforToday = (point) => dayjs(point.dateFrom).isSameOrBefore(dayjs()
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future'
-};
-
 const filter = {
   [FilterType.EVERYTHING]: (tripPoints) => tripPoints,
-  [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => isDateBeforToday(tripPoint.dateFrom)),
+  [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => isDateBeforToday(tripPoint)),
 };
 
 const sortByDay = (p1, p2) => (dayjs(p1.dateFrom).diff(dayjs(p2.dateFrom)));
