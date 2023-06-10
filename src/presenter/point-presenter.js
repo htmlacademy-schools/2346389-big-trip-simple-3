@@ -8,7 +8,7 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export default class PointPresenter {
+export default class PointPresenter { // отвечает за создание и управление компонентами точки маршрута
   #pointListContainer = null;
   #handleModeChange = null;
   #handleDataChange = null;
@@ -26,10 +26,8 @@ export default class PointPresenter {
 
   init(point, offers, destinations) {
     this.#point = point;
-
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
-
     this.#pointComponent = new Point({
       point: this.#point,
       offers: offers,
@@ -57,24 +55,23 @@ export default class PointPresenter {
       replace(this.#pointComponent, prevPointEditComponent);
       this.#mode = Mode.DEFAULT;
     }
-
     remove(prevPointComponent);
     remove(prevPointEditComponent);
   }
 
-  destroy() {
+  destroy() { // удаляет компоненты точки маршрута
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   }
 
-  resetView() {
+  resetView() { // возвращает компонент точки маршрута в режим чтения
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
 
-  setSaving() {
+  setSaving() { // устанавливает состояние компонента Editing во время сохранения данных
     if (this.#mode === Mode.EDITING) {
       this.#pointEditComponent.updateElement({
         isDisabled: true,
@@ -83,7 +80,7 @@ export default class PointPresenter {
     }
   }
 
-  setDeleting() {
+  setDeleting() { // устанавливает состояние компонента Editing во время удаления данных
     if (this.#mode === Mode.EDITING) {
       this.#pointEditComponent.updateElement({
         isDisabled: true,
@@ -92,12 +89,11 @@ export default class PointPresenter {
     }
   }
 
-  setAborting() {
+  setAborting() { // устанавливает состояние компонента точки маршрута в случае ошибки при сохранении или удалении данных
     if (this.#mode === Mode.DEFAULT) {
       this.#pointComponent.shake();
       return;
     }
-
     const resetFormState = () => {
       this.#pointEditComponent.updateElement({
         isDisabled: false,
@@ -105,21 +101,7 @@ export default class PointPresenter {
         isDeleting: false,
       });
     };
-
     this.#pointEditComponent.shake(resetFormState);
-  }
-
-  #replacePointToForm() {
-    replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange();
-    this.#mode = Mode.EDITING;
-  }
-
-  #replaceFormToPoint() {
-    replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {
@@ -159,4 +141,17 @@ export default class PointPresenter {
       point,
     );
   };
+
+  #replacePointToForm() { // Point -> Editing
+    replace(this.#pointEditComponent, this.#pointComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
+  }
+
+  #replaceFormToPoint() { // Editing -> Point
+    replace(this.#pointComponent, this.#pointEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  }
 }

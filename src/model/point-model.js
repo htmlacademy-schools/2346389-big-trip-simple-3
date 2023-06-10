@@ -90,7 +90,7 @@ export default class PointModel extends Observable {
   }
 
   #adaptToClient(tripPoint) { // преобразует объект в формат для клиент
-    // лобавление новых свойств
+    // добавление новых свойств
     const adaptedTripPoint = {...tripPoint,
       dateFrom: tripPoint['date_from'],
       dateTo: tripPoint['date_to'],

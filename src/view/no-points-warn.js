@@ -7,7 +7,7 @@ function createNoPointsWarnTemplate(filterType) {
   return '<p class="trip-events__msg">Click New Event to create your first point</p>';
 }
 
-export default class NoPointsView extends AbstractView {
+export default class NoPointsWarn extends AbstractView {
   #filterType = null;
 
   constructor({filterType}){

@@ -9,6 +9,6 @@ export default class FilterModel extends Observable { // фильтр, кото�
   }
 
   setFilter(updateType, filter) { //  сохраненяет переданное значение фильтра в приватное поле #filter
-    this._notify(updateType, filter);
+    this._notify(updateType, this.#filter = filter);
   }
 }

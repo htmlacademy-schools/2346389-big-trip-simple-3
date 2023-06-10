@@ -15,15 +15,10 @@ const formatToFormDate = (date) => dayjs(date).format(EVENT_DATETIME_FORMAT);
 const formatToClassicFormat = (date) => dayjs(date).format(EVENT_CLASSIC_FORMAT);
 
 const getRandomElement = (items) => items[Math.floor(Math.random() * items.length)];
-
 const getRandomPrice = () => Math.floor(Math.random() * 1000) + 100;
-
 const getRandomId = () => Math.floor(Math.random() * 100) + 1;
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
-
 const isDateBeforToday = (point) => dayjs(point.dateFrom).isBefore(dayjs(), 'day');
-
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
 const filter = {
@@ -46,4 +41,3 @@ function sortByPrice(p1, p2) {
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
   formatToUpperCase, formatToFormDate, formatToClassicFormat, isEscapeKey, filter, sortByDay, sortByTime, sortByPrice, updateItem};
 
-//в архив

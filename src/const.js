@@ -26,7 +26,7 @@ export const UpdateType = {
   PATCH: 'PATCH', // минимальное обновление интерфейса
   MINOR: 'MINOR', // среднее обновление
   MAJOR: 'MAJOR', // полная перерисовка
-  INIT: 'INIT'
+  INIT: 'INIT' // инициализация
 };
 
 export const pointType = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];

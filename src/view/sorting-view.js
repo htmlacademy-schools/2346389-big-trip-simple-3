@@ -37,5 +37,3 @@ export default class Sorting extends AbstractView {
     this._callback.onSortTypeChange(evt.target.value);
   };
 }
-
-//в архив

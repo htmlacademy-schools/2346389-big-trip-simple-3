@@ -5,7 +5,7 @@ import flatpickr from 'flatpickr';
 import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const BLANK_POINT = {
+const BLANK_POINT = { // точка по умолчанию
   basePrice: 500,
   type: 'flight',
   dateFrom: '2023-05-15T09:45:17.375Z',
@@ -15,14 +15,14 @@ const BLANK_POINT = {
   offersIDs: []
 };
 
-const getDeleteTitle = (isEditForm, isDeleting) => {
+const getDeleteTitle = (isEditForm, isDeleting) => { //  возвращает текст для кнопки удаления точки маршрута
   if (!isEditForm) {
     return 'Cancel';
   }
   return (isDeleting) ? 'Deleting...' : 'Delete';
 };
 
-function createOffersTemplate(offers, currentTypeOffers, checkedOffers, id, isDisabled) {
+function createOffersTemplate(offers, currentTypeOffers, checkedOffers, id, isDisabled) { // создает шаблон списка дополнительных опций, доступных для данного типа точки маршрута
   const offs = currentTypeOffers.map((currOffer) => offers.find((offer) => offer.id === currOffer));
   return offs.map((offer) => {
     const isOfferChecked = checkedOffers.includes(offer.id) ? 'checked' : '';
@@ -38,7 +38,7 @@ function createOffersTemplate(offers, currentTypeOffers, checkedOffers, id, isDi
   }).join('');
 }
 
-function createDestinationPicturesTemplate(destination) {
+function createDestinationPicturesTemplate(destination) { // создает шаблон списка изображений, связанных с местом назначения
   return destination.pictures
     .map((pic) => `
     <img class="event__photo" src="${pic.src}" alt="${pic.description}">
@@ -46,7 +46,7 @@ function createDestinationPicturesTemplate(destination) {
     .join('');
 }
 
-function createDestinationDescriptionTemplate(destination) {
+function createDestinationDescriptionTemplate(destination) { // создает шаблон HTML-кода для блока с описанием места назначения
   return (destination) ? `
   <div class="event__photos-container">
     <div class="event__photos-tape">
@@ -55,7 +55,7 @@ function createDestinationDescriptionTemplate(destination) {
   </div>` : '';
 }
 
-function createEventDetailsTemplate(point, destination, offers, isDisabled) {
+function createEventDetailsTemplate(point, destination, offers, isDisabled) { // создает шаблон HTML-кода для блока с дополнительными опциями и блока с описанием места назначения
   const offs = offers.find((offer) => offer.type === point.type).offers;
   const currentTypeOffers = point.offersIDs;
   return `
@@ -72,14 +72,14 @@ function createEventDetailsTemplate(point, destination, offers, isDisabled) {
   </section>`;
 }
 
-function generateRollupButton(isEditForm) {
+function generateRollupButton(isEditForm) { // создает шаблон HTML-кода для кнопки rollup
   return (!isEditForm) ? '' : `
   <button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Open event</span>
   </button>`;
 }
 
-function createEventTypeList(currentType, currentId) {
+function createEventTypeList(currentType, currentId) { //  создает список типов точек маршрута
   return pointType.map((type) => `
   <div class="event__type-item">
     <input id="event-type-${type}-${currentId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === currentType) ? 'checked' : ''}>
@@ -88,13 +88,13 @@ function createEventTypeList(currentType, currentId) {
   ).join('');
 }
 
-function createDestinationList(dest) {
+function createDestinationList(dest) { // создает список мест назначения
   return dest.map((destination) => `
     <option value="${destination.name}"></option>`
   ).join('');
 }
 
-function createEditingFormTemplate(point, offers, destinations, isEditForm) {
+function createEditingFormTemplate(point, offers, destinations, isEditForm) { // создает шаблон HTML-кода для формы редактирования точки маршрута
   const destName = destinations.find((destination) => destination.id === point.destination).name;
   const dest = destinations.find((destination) => destination.name === destName);
   return (
@@ -149,7 +149,7 @@ function createEditingFormTemplate(point, offers, destinations, isEditForm) {
   );
 }
 
-export default class EditingForm extends AbstractStatefulView{
+export default class Editing extends AbstractStatefulView{ // компонент интерфейса для редактирования точки маршрута
   #isEditForm = null;
   #offers = null;
   #destinations = null;
@@ -161,7 +161,7 @@ export default class EditingForm extends AbstractStatefulView{
 
   constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onRollUpButton, onDeleteClick, isEditForm = true}) {
     super();
-    this._setState(EditingForm.parsePointToState(point, offers));
+    this._setState(Editing.parsePointToState(point, offers));
     this.#offers = offers;
     this.#destinations = destinations;
     this.#isEditForm = isEditForm;
@@ -192,29 +192,64 @@ export default class EditingForm extends AbstractStatefulView{
 
   reset(point) {
     this.updateElement(
-      EditingForm.parsePointToState(point, this.#offers),
+      Editing.parsePointToState(point, this.#offers),
     );
   }
 
-  _restoreHandlers() {
-    this.element.querySelector('.event__type-group')
-      .addEventListener('change', this.#eventTypeHandler);
-    this.element.querySelector('.event__input--destination')
-      .addEventListener('change', this.#destinationHandler);
-    this.element.querySelector('.event__input--price')
-      .addEventListener('input', this.#priceInputHandler);
-    this.element.querySelector('.event--edit')
-      .addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__available-offers')
-      .addEventListener('change', this.#offersHandler);
-    if (this.#isEditForm) {
-      // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
-      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonHandler);
-      this.#setFromDatePicker();
-      this.#setToDatePicker();
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit(Editing.parseStateToPoint(this._state));
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(Editing.parseStateToPoint(this._state));
+  };
+
+  #rollUpButtonHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleRollupButton();
+  };
+
+  #eventTypeHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      offersIDs: []
+    });
+    this.updateElement({
+      type: evt.target.value,
+      offers: this.#offers.find((offer) => offer.type === evt.target.value).offers.map((offer) => offer.id),
+      currentTypeOffers: this.#offers.find((offer) => offer.type === evt.target.value).offers
+    });
+  };
+
+  #destinationHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: this.#destinations.find((destination) => destination.name === evt.target.value).id,
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value,
+    });
+  };
+
+  #offersHandler = (evt) => {
+    evt.preventDefault();
+    const clickedOfferId = Number(evt.target.name.split('-').at(-1));
+    const newOffersIds = this._state.offersIDs.slice();
+    if (newOffersIds.includes(clickedOfferId)) {
+      newOffersIds.splice(newOffersIds.indexOf(clickedOfferId), 1);
+    } else {
+      newOffersIds.push(clickedOfferId);
     }
-  }
+    this._setState({
+      offersIDs: newOffersIds
+    });
+  };
 
   #fromDateChangeHandler = ([userDate]) => {
     this.updateElement({
@@ -255,58 +290,6 @@ export default class EditingForm extends AbstractStatefulView{
     );
   }
 
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormSubmit(EditingForm.parseStateToPoint(this._state));
-  };
-
-  #formDeleteClickHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleDeleteClick(EditingForm.parseStateToPoint(this._state));
-  };
-
-  #rollUpButtonHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleRollupButton();
-  };
-
-  #eventTypeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      type: evt.target.value,
-      offers: this.#offers.find((offer) => offer.type === evt.target.value).offers.map((offer) => offer.id),
-      currentTypeOffers: this.#offers.find((offer) => offer.type === evt.target.value).offers
-    });
-  };
-
-  #destinationHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      destination: this.#destinations.find((destination) => destination.name === evt.target.value).id,
-    });
-  };
-
-  #priceInputHandler = (evt) => {
-    evt.preventDefault();
-    this._setState({
-      basePrice: evt.target.value,
-    });
-  };
-
-  #offersHandler = (evt) => {
-    evt.preventDefault();
-    const clickedOfferId = Number(evt.target.name.split('-').at(-1));
-    const newOffersIds = this._state.offersIDs.slice();
-    if (newOffersIds.includes(clickedOfferId)) {
-      newOffersIds.splice(newOffersIds.indexOf(clickedOfferId), 1);
-    } else {
-      newOffersIds.push(clickedOfferId);
-    }
-    this._setState({
-      offersIDs: newOffersIds
-    });
-  };
-
   static parsePointToState(point, offers) {
     return {...point,
       currentTypeOffers: offers.find((offer) => offer.type === point.type).offers,
@@ -322,9 +305,25 @@ export default class EditingForm extends AbstractStatefulView{
     delete point.isDisabled;
     delete point.isSaving;
     delete point.isDeleting;
-
-    // eslint-disable-next-line no-console
-    console.log(point);
     return point;
+  }
+
+  _restoreHandlers() { // устанавливает обработчики событий для элементов формы
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#eventTypeHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('input', this.#priceInputHandler);
+    this.element.querySelector('.event--edit')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__available-offers')
+      .addEventListener('change', this.#offersHandler);
+    if (this.#isEditForm) {
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonHandler);
+      this.#setFromDatePicker();
+      this.#setToDatePicker();
+    }
   }
 }

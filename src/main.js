@@ -6,14 +6,14 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointApiService from './trip-point-api-service.js';
 
-const AUTHORIZATION = 'Basic cci';
+const AUTHORIZATION = 'Basic siu';
 const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
 
-const container = document.querySelector('.trip-events');
-const pageHeader = document.querySelector('.trip-main');
-const pageFilterElement = document.querySelector('.trip-controls__filters');
-const filterModel = new FilterModel();
-const pointsApiService = new PointApiService(END_POINT, AUTHORIZATION);
+const container = document.querySelector('.trip-events'); // HTML-элемент контейнера, в котором будет отображаться список мероприятий
+const pageHeader = document.querySelector('.trip-main'); // адает HTML-элемент шапки страницы, в которой находятся элементы управления и общая информация
+const pageFilterElement = document.querySelector('.trip-controls__filters'); // задает HTML-элемент блока фильтров
+const filterModel = new FilterModel(); // содержит данные фильтрации списка мероприятий и методы для их изменения
+const pointsApiService = new PointApiService(END_POINT, AUTHORIZATION); // экземпляр класса для интерфейс для работы с сервером
 const point = new PointModel({
   pointsApiService: pointsApiService
 });
@@ -22,11 +22,8 @@ const boardPresenter = new BoardPresenter({
   boardContainer: container,
   pointsModel: point,
   filterModel,
-  onNewPointDestroy: handleNewPointFormClose
+  onNewPointDestroy: handleNewPointFormClose // функция-обработчик закрытия форм
 });
-
-// eslint-disable-next-line no-console
-console.log(filterModel);
 
 const filterPresenter = new FilterPresenter({
   filterContainer: pageFilterElement,
