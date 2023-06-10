@@ -6,7 +6,7 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointApiService from './trip-point-api-service.js';
 
-const AUTHORIZATION = 'Basic chavi67';
+const AUTHORIZATION = 'Basic chavi6';
 const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
 
 const container = document.querySelector('.trip-events');

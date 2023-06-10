@@ -22,13 +22,13 @@ const getRandomId = () => Math.floor(Math.random() * 100) + 1;
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const isDateBeforToday = (point) => dayjs(point.dateFrom).isSameOrBefore(dayjs(), 'day');
+const isDateBeforToday = (point) => dayjs(point.dateFrom).isBefore(dayjs(), 'day');
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
 const filter = {
   [FilterType.EVERYTHING]: (tripPoints) => tripPoints,
-  [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => isDateBeforToday(tripPoint)),
+  [FilterType.FUTURE]:(tripPoints) => tripPoints.filter((tripPoint) => !isDateBeforToday(tripPoint)),
 };
 
 const sortByDay = (p1, p2) => (dayjs(p1.dateFrom).diff(dayjs(p2.dateFrom)));

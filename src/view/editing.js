@@ -8,8 +8,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 const BLANK_POINT = {
   basePrice: 500,
   type: 'flight',
-  dateFrom: '2023-05-25T09:45:17.375Z',
-  dateTo: '2023-05-25T10:30:55.375Z',
+  dateFrom: '2023-05-15T09:45:17.375Z',
+  dateTo: '2023-05-15T10:30:55.375Z',
   destination: 1,
   id: 0,
   offersIDs: []

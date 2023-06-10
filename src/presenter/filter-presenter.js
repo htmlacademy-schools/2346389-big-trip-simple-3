@@ -1,18 +1,16 @@
-import {render, replace, remove} from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import Filters from '../view/filters-view.js';
-import {FilterType, UpdateType} from '../const.js';
+import { FilterType, FilterTypeDescriptions, UpdateType } from '../const.js';
+import { filter } from '../util.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointsModel = null;
-
   #filterComponent = null;
 
-  constructor({filterContainer, filterModel, pointsModel}) {
+  constructor({ filterContainer, filterModel, pointsModel }) {
     this.#filterContainer = filterContainer;
-    // eslint-disable-next-line no-console
-    console.log(this.#filterModel);
     this.#filterModel = filterModel;
     this.#pointsModel = pointsModel;
 
@@ -20,12 +18,8 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get filters() { // возвращает массив объектов с типом фильтра
-    const filt = Object.values(FilterType).map((type) => ({
-      type,
-      count: 0
-    }));
-    return filt;
+  get filters() {
+    return [FilterType.EVERYTHING, FilterType.FUTURE].map((type) => ({ type, name: FilterTypeDescriptions[type], count: filter[type](this.#pointsModel.points).length }));
   }
 
   init() {
