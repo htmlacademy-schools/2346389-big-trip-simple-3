@@ -115,8 +115,6 @@ export default class BoardPresenter {
   };
 
   #handleModeChange = () => {
-    // eslint-disable-next-line no-console
-    console.log(this.#newPointPresenter);
     this.#newPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
@@ -160,7 +158,7 @@ export default class BoardPresenter {
   }
 
 
-  #renderNoPoints() {
+  #renderNoPointsWarn() {
     remove(this.#sortPoints);
     remove(this.#loadingComponent);
     this.#noPointComponent = new NoPointsWarn({
@@ -201,7 +199,7 @@ export default class BoardPresenter {
       return;
     }
     if (points.length === 0) {
-      this.#renderNoPoints();
+      this.#renderNoPointsWarn();
       return;
     }
     this.#renderSort();

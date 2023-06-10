@@ -10,11 +10,11 @@ export default class OffersModel extends Observable {
     this.init();
   }
 
-  async init() {
+  async init() { // запрашивает список предложений с сервера
     try {
-      this.#offers = await this.#tripPointApiService.offers;
+      this.#offers = await this.#tripPointApiService.offers; // успех
     } catch(err) {
-      this.#offers = [];
+      this.#offers = []; // ошибка
     }
   }
 
