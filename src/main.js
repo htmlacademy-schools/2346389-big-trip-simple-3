@@ -51,3 +51,5 @@ point.init()
   });
 filterPresenter.init();
 boardPresenter.init();
+
+// в архив

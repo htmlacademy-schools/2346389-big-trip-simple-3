@@ -67,3 +67,5 @@ export default class PointApiService extends ApiService {
     return adaptedTripPoint;
   }
 }
+
+// в архив

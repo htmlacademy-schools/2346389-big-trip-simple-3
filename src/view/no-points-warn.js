@@ -19,3 +19,5 @@ export default class NoPointsWarn extends AbstractView {
     return createNoPointsWarnTemplate(this.#filterType);
   }
 }
+
+// в архив

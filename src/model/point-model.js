@@ -107,3 +107,5 @@ export default class PointModel extends Observable {
     return adaptedTripPoint; // адаптированный объект точки маршрута
   }
 }
+
+// в архив

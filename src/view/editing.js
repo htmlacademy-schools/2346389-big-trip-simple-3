@@ -327,3 +327,5 @@ export default class Editing extends AbstractStatefulView{ // компонент
     }
   }
 }
+
+// в архив

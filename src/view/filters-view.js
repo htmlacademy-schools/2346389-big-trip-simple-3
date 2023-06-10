@@ -51,3 +51,5 @@ export default class Filters extends AbstractView {
     this.#handleFilterTypeChange(evt.target.value);
   };
 }
+
+// в архив
