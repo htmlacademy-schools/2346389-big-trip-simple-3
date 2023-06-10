@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createFilterItemTemplate(filter, currentFilter) {
+function createFilterItemTemplate(filter, currentFilter) { // возвращает HTML-шаблон для элемента фильтра
   return (`
   <div class="trip-filters__filter">
       <input
@@ -16,7 +16,7 @@ function createFilterItemTemplate(filter, currentFilter) {
   );
 }
 
-function createFiltersTemplate(filterItems, currentFilter) {
+function createFiltersTemplate(filterItems, currentFilter) { // преобразовывает массив объектов фильтров в строку HTML-кода
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter, currentFilter))
     .join('');

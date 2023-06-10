@@ -23,19 +23,6 @@ export default class PointApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  async updatePoint(tripPoint) {
-    const response = await this._load({
-      url: `points/${tripPoint.id}`,
-      method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(tripPoint)),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    });
-
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
-  }
-
   async addPoint(tripPoint) {
     const response = await this._load({
       url: 'points',
@@ -43,9 +30,18 @@ export default class PointApiService extends ApiService {
       body: JSON.stringify(this.#adaptToServer(tripPoint)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
-
     const parsedResponse = await ApiService.parseResponse(response);
+    return parsedResponse;
+  }
 
+  async updatePoint(tripPoint) {
+    const response = await this._load({
+      url: `points/${tripPoint.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(this.#adaptToServer(tripPoint)),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+    const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   }
 
@@ -54,7 +50,6 @@ export default class PointApiService extends ApiService {
       url: `points/${tripPoint.id}`,
       method: Method.DELETE,
     });
-
     return response;
   }
 
@@ -62,10 +57,9 @@ export default class PointApiService extends ApiService {
     const adaptedTripPoint = {...tripPoint,
       'date_from': (tripPoint.dateFrom) ? new Date(tripPoint.dateFrom).toISOString() : new Date().toISOString,
       'date_to': (tripPoint.dateFrom) ? new Date(tripPoint.dateTo).toISOString() : new Date().toISOString,
-      'base_price': Number(tripPoint.basePrice),
+      'base_price': tripPoint.basePrice,
       'offers': tripPoint.offersIDs
     };
-
     delete adaptedTripPoint.dateFrom;
     delete adaptedTripPoint.dateTo;
     delete adaptedTripPoint.basePrice;

@@ -2,7 +2,7 @@ import {render, RenderPosition, remove} from '../framework/render.js';
 import Editing from '../view/editing.js';
 import {UserAction, UpdateType} from '../const.js';
 
-export default class PointNewPresenter { // класс-презентер для создания новой точки маршрута
+export default class PointNewPresenter { // класс-презентер для добавления новой точки маршрута
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
@@ -32,7 +32,7 @@ export default class PointNewPresenter { // класс-презентер для
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  destroy() {
+  destroy() { // удаляет компоненты формы создания новой точки маршрута
     if (this.#pointEditComponent === null) {
       return;
     }
@@ -45,14 +45,14 @@ export default class PointNewPresenter { // класс-презентер для
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  setSaving() {
+  setSaving() { //  устанавливает состояние компонента в режим сохранения
     this.#pointEditComponent.updateElement({
       isDisabled: true,
       isSaving: true,
     });
   }
 
-  setAborting() {
+  setAborting() { // устанавливает состояние компонента в режим ошибки
     const resetFormState = () => {
       this.#pointEditComponent.updateElement({
         isDisabled: false,
@@ -64,7 +64,7 @@ export default class PointNewPresenter { // класс-презентер для
     this.#pointEditComponent.shake(resetFormState);
   }
 
-  #handleFormSubmit = (point) => {
+  #handleFormSubmit = (point) => { // отвечает за отправку данных формы создания новой точки маршрута
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
@@ -73,12 +73,12 @@ export default class PointNewPresenter { // класс-презентер для
     );
   };
 
-  #deleteId = (point) => {
+  #deleteId = (point) => { // удаляет поле id из объекта point и возвращает очищенный объект
     delete point.id;
     return point;
   };
 
-  #handleDeleteClick = () => {
+  #handleDeleteClick = () => { // обработчик клика по кнопке удаления формы
     this.destroy();
   };
 

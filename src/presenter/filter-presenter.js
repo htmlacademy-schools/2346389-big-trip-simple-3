@@ -3,7 +3,7 @@ import Filters from '../view/filters-view.js';
 import { FilterType, FilterTypeDescriptions, UpdateType } from '../const.js';
 import { filter } from '../util.js';
 
-export default class FilterPresenter {
+export default class FilterPresenter { // отображение компонента управления фильтрацией на странице
   #filterContainer = null;
   #filterModel = null;
   #pointsModel = null;
@@ -22,7 +22,7 @@ export default class FilterPresenter {
     return [FilterType.EVERYTHING, FilterType.FUTURE].map((type) => ({ type, name: FilterTypeDescriptions[type], count: filter[type](this.#pointsModel.points).length }));
   }
 
-  init() {
+  init() { // инициализация компонентов фильтрации
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
@@ -45,7 +45,7 @@ export default class FilterPresenter {
     this.init();
   };
 
-  #handleFilterTypeChange = (filterType) => {
+  #handleFilterTypeChange = (filterType) => { // обработчик изменения типа фильтрации
     if (this.#filterModel.filter === filterType) {
       return;
     }
