@@ -213,3 +213,5 @@ export default class BoardPresenter {
     this.#uiBlocker.unblock(); // разблокирует пользовательский интерфейс
   };
 }
+
+// в архив

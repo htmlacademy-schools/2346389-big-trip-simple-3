@@ -22,3 +22,5 @@ export default class DestinationModel extends Observable {
     return this.#destinations;
   }
 }
+
+// в архив

@@ -73,3 +73,4 @@ export default class Point extends AbstractView {
   };
 }
 
+// в архив

@@ -53,3 +53,5 @@ export default class FilterPresenter { // отображение компоне�
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
 }
+
+// в архив

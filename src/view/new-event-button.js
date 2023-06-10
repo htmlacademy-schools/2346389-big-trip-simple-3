@@ -22,3 +22,5 @@ export default class NewEventButton extends AbstractView {
     this.#handleClick();
   };
 }
+
+// в архив

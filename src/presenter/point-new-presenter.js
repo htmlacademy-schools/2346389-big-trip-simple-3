@@ -89,3 +89,5 @@ export default class PointNewPresenter { // класс-презентер для
     }
   };
 }
+
+// в архив

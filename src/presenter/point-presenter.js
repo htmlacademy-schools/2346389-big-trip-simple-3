@@ -155,3 +155,5 @@ export default class PointPresenter { // отвечает за создание 
     this.#mode = Mode.DEFAULT;
   }
 }
+
+// в архив

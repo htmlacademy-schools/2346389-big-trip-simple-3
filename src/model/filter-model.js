@@ -12,3 +12,5 @@ export default class FilterModel extends Observable { // фильтр, кото�
     this._notify(updateType, this.#filter = filter);
   }
 }
+
+// в архив
