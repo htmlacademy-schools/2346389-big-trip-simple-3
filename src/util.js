@@ -41,4 +41,4 @@ function sortByPrice(p1, p2) {
 export {getRandomElement, getRandomPrice, getRandomId, formatToEventDateTime, formatToEventDate, formatToDateTime, formatToTime,
   formatToUpperCase, formatToFormDate, formatToClassicFormat, isEscapeKey, filter, sortByDay, sortByTime, sortByPrice, updateItem};
 
-// good job!
+// good job)))
